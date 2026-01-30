@@ -1,0 +1,71 @@
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_LEN 5
+
+char *get_input(void);
+void add_to_history(char *input);
+void remove_oldest_record(void);
+void print_history(void);
+
+int historyCount = 0;
+char *history[MAX_LEN];
+
+int main() {
+  while (1) {
+    char *input = get_input();
+    add_to_history(input);
+    if (strcmp(input, "print") == 0) {
+      print_history();
+    }
+  }
+
+  // Free memory of history
+  while (historyCount > 0) {
+    remove_oldest_record();
+  }
+
+  return 0;
+}
+
+char *get_input() {
+  char *input = NULL;
+  size_t inputSize = 0;
+  printf("Enter input: ");
+  ssize_t len = getline(&input, &inputSize, stdin);
+  if (len == -1) {
+    exit(1);
+  }
+  // Remove newline character
+ // if (len > 0 && input[len - 1] == '\n') {
+   // input[len - 1] = '\0';
+  //}
+  return input;
+}
+
+void add_to_history(char *input) {
+  if (historyCount >= MAX_LEN) {
+    remove_oldest_record();
+  }
+  history[historyCount] = input;
+  historyCount++;
+}
+
+void remove_oldest_record() {
+  if (historyCount > 0) {
+    // Free memory of oldest record
+    free(history[0]);
+    for (int i = 1; i < historyCount; i++) {
+      history[i - 1] = history[i];
+    }
+    historyCount--;
+  }
+}
+
+void print_history() {
+  for (int i = 0; i < historyCount; i++) {
+    printf("%s\n", history[i]);
+  }
+}
