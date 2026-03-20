@@ -56,7 +56,7 @@ void *handle_client(void *arg) {
   if (close(cfd) == -1) {
     handle_error("close");
   }
-
+  
   printf("Ending thread for client %d\n", client_id);
   return NULL;
 }
@@ -102,8 +102,7 @@ int main() {
     client->client_id = client_id_counter++;
     pthread_mutex_unlock(&client_id_mutex);
 
-    printf("New client created! ID %d on socket FD %d\n", client->client_id,
-           client->cfd);
+    printf("New client created! ID %d on socket FD %d\n", client -> client_id, client -> cfd);
 
     pthread_t tid;
     if (pthread_create(&tid, NULL, handle_client, client) != 0) {
